@@ -30,6 +30,26 @@ server.get('/api/zoos', async (req, res) => {
   }
 });
 
+
+
+
+
+//POST
+
+server.post('/api/zoos', async (req, res) => {
+  try {
+    const [id] = await db('zoos').insert(req.body);
+    const animal = await db('zoos')
+      .where({ id })
+      .first();
+    res.status(201).json(animal);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
