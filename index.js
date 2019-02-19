@@ -31,7 +31,16 @@ server.get('/api/zoos', async (req, res) => {
 });
 
 
-
+server.get('/api/zoos/:id', async (req, res) => {
+  try {
+    const animal = await db('zoos')
+      .where({ id: req.params.id })
+      .first();
+    res.status(200).json(animal);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 
 //POST
@@ -45,6 +54,26 @@ server.post('/api/zoos', async (req, res) => {
     res.status(201).json(animal);
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+
+//PUT
+server.put('/api/zoos/:id', async (req, res) => {
+  try {
+    const count = await db('zoos')
+      .where({ id: req.params.id })
+      .update(req.body);
+    if (count) {
+      const animal = await db('zoos')
+        .where({ id: req.params.id })
+        .first();
+      res.status(200).json(animal);
+    } else {
+      res.status(404).json({ error: "The animal with the specified ID does not exist"})
+    }
+  } catch (error) {
+    res.status(500).json({ error: "We could not complete the request at this time."})
   }
 });
 
