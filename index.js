@@ -77,6 +77,21 @@ server.put('/api/zoos/:id', async (req, res) => {
   }
 });
 
+//delete
+server.delete('/api/zoos/:id', async (req, res) => {
+  try {
+    const count = await db('zoos')
+      .where({ id: req.params.id })
+      .del();
+    if (count) {
+      res.status(204).end();
+    } else {
+      res.status(404).json({ error: "The animal with the specified ID does not exist"})
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 
 const port = 3300;
